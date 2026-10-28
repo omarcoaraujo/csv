@@ -1,6 +1,6 @@
 # csv
 
-CSV parser and encoder for [Luau](https://luau.org). Pure functions on strings: no filesystem, no runtime APIs, so it runs on Lute, Lune and Zune.
+Pure functions on [Luau](https://luau.org) strings: no filesystem, no runtime APIs, so it runs on Lute, Lune and Zune.
 
 ## Installation
 
