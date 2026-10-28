@@ -1,5 +1,4 @@
 local csv = require "@lib"
-
 local spec = {} :: { [string]: any }
 
 local function fails(callback: () -> any, expected: string)
@@ -14,6 +13,7 @@ function spec.should_encode_header_and_records()
 		headers = { "date", "amount_brl" },
 		records = { { date = "2026-10-01", amount_brl = "12.50" }, { date = "2026-10-02", amount_brl = "1250.00" } },
 	}
+
 	assert(csv.encode(data) == "date,amount_brl\n2026-10-01,12.50\n2026-10-02,1250.00\n")
 end
 
@@ -97,6 +97,7 @@ function spec.should_round_trip_data()
 		headers = { "a", "b" },
 		records = { { a = "1,2", b = "" }, { a = 'q"q', b = "l1\nl2" }, { a = "", b = "" } },
 	}
+
 	local parsed = csv.parse(csv.encode(data))
 	assert(#parsed.records == 3)
 

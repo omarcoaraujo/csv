@@ -1,5 +1,4 @@
 local csv = require "@lib"
-
 local spec = {} :: { [string]: any }
 
 local function fails(callback: () -> any, expected: string)
@@ -24,8 +23,10 @@ end
 
 function spec.should_key_records_by_header_name()
 	local data = csv.parse "date,category,amount_brl\n2026-10-01,food,12.50\n2026-10-02,rent,1250.00\n"
+
 	assert(#data.records == 2)
 	assert(data.records[1].date == "2026-10-01")
+
 	assert(data.records[1].amount_brl == "12.50")
 	assert(data.records[2].category == "rent")
 	assert(data.records[2].amount_brl == "1250.00")
@@ -42,6 +43,7 @@ function spec.should_parse_row_shaped_like_the_real_data()
 		'date,category,description,amount_brl,type,paid_from\n2026-10-05,food,"Market, downtown",250.00,expense,card\n'
 	local record = csv.parse(text).records[1]
 	assert(record.description == "Market, downtown")
+
 	assert(record.amount_brl == "250.00")
 	assert(record.paid_from == "card")
 end
