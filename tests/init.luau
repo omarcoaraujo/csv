@@ -1,15 +1,15 @@
-local tint = require "@pkg/tint"
-local suites = {
+const tint = require "@pkg/tint"
+const suites = {
 	parse = require "@self/parse",
 	encode = require "@self/encode",
 } :: { [string]: { [string]: any } }
 
-local function is_test(name: string, value: any)
+const function is_test(name: string, value: any)
 	return typeof(value) == "function" and name:sub(1, 7) == "should_"
 end
 
-local function get_sorted_keys(suite: { [string]: any })
-	local keys = {}
+const function get_sorted_keys(suite: { [string]: any })
+	const keys = {}
 
 	for key, value in suite do
 		if is_test(key, value) then table.insert(keys, key) end
@@ -26,7 +26,7 @@ for suite_name, suite in suites do
 	for _, name in get_sorted_keys(suite) do
 		total += 1
 
-		local success, error_message = pcall(suite[name])
+		const success, error_message = pcall(suite[name])
 		if success then continue end
 
 		failed += 1

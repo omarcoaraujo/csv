@@ -1,13 +1,13 @@
-local csv = require "@lib"
-local spec = {} :: { [string]: any }
+const csv = require "@lib"
+const spec = {} :: { [string]: any }
 
-local function fails(callback: () -> any, expected: string)
-	local success, message = pcall(callback)
+const function fails(callback: () -> any, expected: string)
+	const success, message = pcall(callback)
 	assert(not success, `expected an error containing "{expected}"`)
 	assert(string.find(tostring(message), expected, 1, true), `wrong error: {message}`)
 end
 
-local function same_headers(actual: { string }, expected: { string })
+const function same_headers(actual: { string }, expected: { string })
 	assert(#actual == #expected, `expected {#expected} columns, got {#actual}`)
 
 	for index, column in expected do
@@ -17,12 +17,12 @@ end
 
 -- shape
 function spec.should_return_headers_in_header_order()
-	local data = csv.parse "date,category,amount_brl\n2026-10-01,food,12.50\n"
+	const data = csv.parse "date,category,amount_brl\n2026-10-01,food,12.50\n"
 	same_headers(data.headers, { "date", "category", "amount_brl" })
 end
 
 function spec.should_key_records_by_header_name()
-	local data = csv.parse "date,category,amount_brl\n2026-10-01,food,12.50\n2026-10-02,rent,1250.00\n"
+	const data = csv.parse "date,category,amount_brl\n2026-10-01,food,12.50\n2026-10-02,rent,1250.00\n"
 
 	assert(#data.records == 2)
 	assert(data.records[1].date == "2026-10-01")
@@ -33,15 +33,15 @@ function spec.should_key_records_by_header_name()
 end
 
 function spec.should_keep_decimal_points_as_text()
-	local data = csv.parse "rate\n5.1859338271045\n0.10\n"
+	const data = csv.parse "rate\n5.1859338271045\n0.10\n"
 	assert(data.records[1].rate == "5.1859338271045")
 	assert(data.records[2].rate == "0.10")
 end
 
 function spec.should_parse_row_shaped_like_the_real_data()
-	local text =
+	const text =
 		'date,category,description,amount_brl,type,paid_from\n2026-10-05,food,"Market, downtown",250.00,expense,card\n'
-	local record = csv.parse(text).records[1]
+	const record = csv.parse(text).records[1]
 	assert(record.description == "Market, downtown")
 
 	assert(record.amount_brl == "250.00")
@@ -49,7 +49,7 @@ function spec.should_parse_row_shaped_like_the_real_data()
 end
 
 function spec.should_return_no_records_for_header_only()
-	local data = csv.parse "a,b\n"
+	const data = csv.parse "a,b\n"
 	same_headers(data.headers, { "a", "b" })
 	assert(#data.records == 0)
 end
@@ -68,38 +68,38 @@ end
 
 -- line endings
 function spec.should_parse_lf()
-	local data = csv.parse "a,b\n1,2\n3,4\n"
+	const data = csv.parse "a,b\n1,2\n3,4\n"
 	assert(#data.records == 2 and data.records[2].b == "4")
 end
 
 function spec.should_parse_crlf()
-	local data = csv.parse "a,b\r\n1,2\r\n3,4\r\n"
+	const data = csv.parse "a,b\r\n1,2\r\n3,4\r\n"
 	assert(#data.records == 2)
 	assert(data.records[1].b == "2" and data.records[2].a == "3")
 end
 
 function spec.should_parse_mixed_line_endings()
-	local data = csv.parse "a,b\r\n1,2\n3,4\r\n"
+	const data = csv.parse "a,b\r\n1,2\n3,4\r\n"
 	assert(#data.records == 2 and data.records[1].b == "2")
 end
 
 function spec.should_parse_without_trailing_newline()
-	local data = csv.parse "a,b\n1,2"
+	const data = csv.parse "a,b\n1,2"
 	assert(#data.records == 1 and data.records[1].b == "2")
 end
 
 function spec.should_parse_with_trailing_newline()
-	local data = csv.parse "a,b\n1,2\n"
+	const data = csv.parse "a,b\n1,2\n"
 	assert(#data.records == 1)
 end
 
 function spec.should_skip_blank_lines()
-	local data = csv.parse "a,b\n\n1,2\n\n\n3,4\n\n"
+	const data = csv.parse "a,b\n\n1,2\n\n\n3,4\n\n"
 	assert(#data.records == 2)
 end
 
 function spec.should_ignore_byte_order_mark()
-	local data = csv.parse "\239\187\191a,b\n1,2\n"
+	const data = csv.parse "\239\187\191a,b\n1,2\n"
 	same_headers(data.headers, { "a", "b" })
 end
 
@@ -109,12 +109,12 @@ function spec.should_parse_quoted_field()
 end
 
 function spec.should_parse_comma_inside_quotes()
-	local data = csv.parse 'a,b\n"1,5",2\n'
+	const data = csv.parse 'a,b\n"1,5",2\n'
 	assert(data.records[1].a == "1,5" and data.records[1].b == "2")
 end
 
 function spec.should_parse_double_quote_inside_quotes()
-	local data = csv.parse 'a,b\n"say ""hi""",2\n'
+	const data = csv.parse 'a,b\n"say ""hi""",2\n'
 	assert(data.records[1].a == 'say "hi"')
 end
 
@@ -123,41 +123,41 @@ function spec.should_parse_field_that_is_only_an_escaped_quote()
 end
 
 function spec.should_parse_lf_inside_quotes()
-	local data = csv.parse 'a,b\n"line one\nline two",2\n3,4\n'
+	const data = csv.parse 'a,b\n"line one\nline two",2\n3,4\n'
 	assert(data.records[1].a == "line one\nline two")
 	assert(#data.records == 2 and data.records[2].a == "3")
 end
 
 function spec.should_parse_crlf_inside_quotes()
-	local data = csv.parse 'a,b\r\n"line one\r\nline two",2\r\n'
+	const data = csv.parse 'a,b\r\n"line one\r\nline two",2\r\n'
 	assert(data.records[1].a == "line one\r\nline two")
 end
 
 function spec.should_parse_quoted_header()
-	local data = csv.parse '"first, name",b\n1,2\n'
+	const data = csv.parse '"first, name",b\n1,2\n'
 	assert(data.headers[1] == "first, name")
 	assert(data.records[1]["first, name"] == "1")
 end
 
 function spec.should_parse_empty_quoted_field_in_a_single_column()
-	local data = csv.parse 'a\n""\nx\n'
+	const data = csv.parse 'a\n""\nx\n'
 	assert(#data.records == 2 and data.records[1].a == "")
 end
 
 -- empty fields
 function spec.should_parse_empty_fields()
-	local data = csv.parse "a,b,c\n1,,3\n,,\n"
+	const data = csv.parse "a,b,c\n1,,3\n,,\n"
 	assert(data.records[1].b == "")
 	assert(data.records[2].a == "" and data.records[2].b == "" and data.records[2].c == "")
 end
 
 function spec.should_parse_trailing_comma_at_end_of_text()
-	local data = csv.parse "a,b\n1,"
+	const data = csv.parse "a,b\n1,"
 	assert(data.records[1].a == "1" and data.records[1].b == "")
 end
 
 function spec.should_keep_spaces_around_fields()
-	local data = csv.parse "a,b\n x , y \n"
+	const data = csv.parse "a,b\n x , y \n"
 	assert(data.records[1].a == " x " and data.records[1].b == " y ")
 end
 
