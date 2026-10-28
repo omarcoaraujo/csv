@@ -1,5 +1,7 @@
 # csv
 
+<a href="https://github.com/omarcoaraujo/csv/actions/workflows/check.yml"><img src="https://github.com/omarcoaraujo/csv/actions/workflows/check.yml/badge.svg" alt="Check"/></a> <a href="https://github.com/omarcoaraujo/csv/actions/workflows/release.yml"><img src="https://github.com/omarcoaraujo/csv/actions/workflows/release.yml/badge.svg" alt="Release"/></a>
+
 Pure functions on [Luau](https://luau.org) strings: no filesystem, no runtime APIs, so it runs on Lute, Lune and Zune.
 
 ## Installation
