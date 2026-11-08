@@ -44,20 +44,6 @@ local text = csv.encode(data)
 - Blank lines and a leading byte order mark are skipped
 - `parse` then `encode` returns the original text when it uses LF and no unneeded quotes
 
-## Errors
-
-Both functions raise a plain message with no traceback position.
-
-| Message | Cause |
-|---|---|
-| `unterminated quote starting at line N` | A quoted field never closes |
-| `line N: expected X fields, got Y` | A row does not match the header |
-| `unexpected quote inside an unquoted field at line N` | A `"` in the middle of an unquoted field |
-| `unexpected character after closing quote at line N` | Text right after a closing quote |
-| `missing header row` | Empty input |
-| `duplicate header "name"` | Two columns with the same name |
-| `record N: column "name" must be a string, got T` | `encode` got a missing or non-string value |
-
 ## Development
 
 ```sh
