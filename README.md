@@ -16,19 +16,19 @@ csv = { name = "omarcoaraujo/csv", version = "^0.1.0" }
 Then require it:
 
 ```luau
-local csv = require("@pkg/csv")
+const csv = require("@pkg/csv")
 ```
 
 ## Usage
 
 ```luau
-local data = csv.parse(text)
+const data = csv.parse(text)
 
 for _, record in data.records do
 	print(record.description, tonumber(record.amount_brl))
 end
 
-local text = csv.encode(data)
+const text = csv.encode(data)
 ```
 
 `parse` reads a header row and returns `{ headers, records }`: the header names in file order, and one table per row keyed by header name. Every value is a string, so convert numbers yourself.
